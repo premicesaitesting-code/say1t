@@ -225,6 +225,25 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 .cdl{font-size:9px;color:var(--txd);letter-spacing:2px;text-transform:uppercase;font-family:var(--mo)}
 .toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);z-index:250;background:var(--s2);border:1px solid var(--bd);border-radius:7px;padding:7px 14px;font-size:10px;font-family:var(--mo);color:var(--tx);opacity:0;transition:opacity .25s;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,.5);white-space:nowrap}
 .toast.show{opacity:1}
+
+/* Caption seek/split buttons */
+.cseek,.csplit{background:none;border:none;cursor:pointer;font-size:9px;padding:0 2px;color:var(--txd);line-height:1;transition:color .1s}
+.cseek:hover{color:var(--gn)}.csplit:hover{color:var(--acc)}
+
+/* Caption nav */
+.cap-nav{display:flex;align-items:center;gap:4px}
+.cap-nav-btn{background:var(--s2);border:1px solid var(--bd);border-radius:4px;color:var(--txd);cursor:pointer;font-size:9px;padding:2px 6px;transition:all .1s}
+.cap-nav-btn:hover{border-color:var(--acc);color:var(--acc)}
+
+/* Adj section */
+.adj-row{display:flex;align-items:center;gap:6px}
+.adj-row .lb{min-width:60px}
+.adj-row input[type=range]{flex:1}
+.adj-ov{font-family:var(--mo);font-size:9px;color:var(--acc);background:rgba(255,85,53,.08);padding:1px 4px;border-radius:3px;min-width:32px;text-align:right}
+.tool-row{display:flex;gap:4px;flex-wrap:wrap}
+.tool-btn{padding:4px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:5px;color:var(--txd);font-size:9px;font-weight:600;cursor:pointer;transition:all .12s}
+.tool-btn:hover{border-color:var(--acc);color:var(--acc)}
+.tool-btn.on{background:var(--acc);color:#fff;border-color:var(--acc)}
 </style>
 </head>
 <body>
@@ -258,7 +277,7 @@ This script will:
     </div>
     <div class="s1s">
       <div class="lb">Settings</div>
-      <div class="og"><div class="oh">Speed <span class="ov" id="sV">3.0×</span></div><input type="range" id="sR" min="0.5" max="8" step="0.5" value="3"></div>
+      <div class="og"><div class="oh">Speed <span class="ov" id="sV">3.0×</span></div><input type="range" id="sR" min="0.1" max="8" step="0.1" value="3"></div>
       <div class="og"><div class="oh">Font <span class="ov" id="fV">40px</span></div><input type="range" id="fR" min="18" max="72" step="2" value="40"></div>
       <div class="og"><div class="oh">Margins <span class="ov" id="mgV">8%</span></div><input type="range" id="mgR" min="4" max="25" step="1" value="8"></div>
       <div class="hr"></div>
@@ -285,26 +304,20 @@ This script will:
     <div class="tlay" id="txL"><div class="tscr" id="txS"><div class="ptx" id="pT"></div></div></div>
     <div class="gl sh" id="gL"></div><div class="dto" id="dT"></div><div class="dbo" id="dB"></div>
     <div class="pm"><div class="pmb" id="pMB"></div></div>
-    <!-- Filter strip -->
+    <!-- Filter strip (12 filters) -->
     <div class="filter-strip" id="fStrip">
       <button class="fbtn on" data-filter="none"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#888,#aaa)"></div><div class="fbtn-label">None</div></button>
       <button class="fbtn" data-filter="warm"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#e8a040,#d45020)"></div><div class="fbtn-label">Warm</div></button>
       <button class="fbtn" data-filter="cool"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#4080d0,#2050a0)"></div><div class="fbtn-label">Cool</div></button>
-      <button class="fbtn" data-filter="vintage"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#c8a878,#8a6840)"></div><div class="fbtn-label">Vintage</div></button>
-      <button class="fbtn" data-filter="bw"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#fff,#000)"></div><div class="fbtn-label">B&W</div></button>
-      <button class="fbtn" data-filter="vivid"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#ff4080,#40c0ff)"></div><div class="fbtn-label">Vivid</div></button>
-      <button class="fbtn" data-filter="matte"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#a0a0b0,#606070)"></div><div class="fbtn-label">Matte</div></button>
-      <button class="fbtn" data-filter="noir"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#333,#111)"></div><div class="fbtn-label">Noir</div></button>
-      <button class="fbtn" data-filter="golden"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#ffd700,#b8860b)"></div><div class="fbtn-label">Golden</div></button>
-      <button class="fbtn" data-filter="cinematic"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#1a3a5c,#0a1a2c)"></div><div class="fbtn-label">Cinema</div></button>
-      <button class="fbtn" data-filter="dreamy"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#e0c0f0,#c0a0e0)"></div><div class="fbtn-label">Dreamy</div></button>
-      <button class="fbtn" data-filter="highcon"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#fff,#000 50%,#fff)"></div><div class="fbtn-label">Hi-Con</div></button>
       <button class="fbtn" data-filter="melanin"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#d06030,#8b3010)"></div><div class="fbtn-label">Melanin</div></button>
       <button class="fbtn" data-filter="bronze"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#c88040,#7a4010)"></div><div class="fbtn-label">Bronze</div></button>
       <button class="fbtn" data-filter="sunkiss"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#ffb830,#d05010)"></div><div class="fbtn-label">Sun Kiss</div></button>
-      <button class="fbtn" data-filter="glow"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#ffd490,#e89050)"></div><div class="fbtn-label">Glow</div></button>
-      <button class="fbtn" data-filter="deep"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#6a1800,#2a0800)"></div><div class="fbtn-label">Deep</div></button>
+      <button class="fbtn" data-filter="cinematic"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#1a3a5c,#0a1a2c)"></div><div class="fbtn-label">Cinema</div></button>
+      <button class="fbtn" data-filter="bw"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#fff,#000)"></div><div class="fbtn-label">B&W</div></button>
+      <button class="fbtn" data-filter="vivid"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#ff4080,#40c0ff)"></div><div class="fbtn-label">Vivid</div></button>
+      <button class="fbtn" data-filter="vintage"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#c8a878,#8a6840)"></div><div class="fbtn-label">Vintage</div></button>
       <button class="fbtn" data-filter="softblur"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#b0b8c8,#8090a8);filter:blur(1px)"></div><div class="fbtn-label">Soft</div></button>
+      <button class="fbtn" data-filter="slim"><div class="fbtn-swatch" style="background:linear-gradient(135deg,#a060d0,#6030a0)"></div><div class="fbtn-label">Slim</div></button>
     </div>
     <div class="ht" id="hT">
       <div class="rb idle" id="rB"><span class="rd"></span><span id="tDs">00:00</span></div>
@@ -336,23 +349,27 @@ This script will:
           <button class="efbtn on" data-filter="none"><div class="efbtn-preview" style="background:linear-gradient(135deg,#888,#aaa)"></div><div class="efbtn-name">None</div></button>
           <button class="efbtn" data-filter="warm"><div class="efbtn-preview" style="background:linear-gradient(135deg,#e8a040,#d45020)"></div><div class="efbtn-name">Warm</div></button>
           <button class="efbtn" data-filter="cool"><div class="efbtn-preview" style="background:linear-gradient(135deg,#4080d0,#2050a0)"></div><div class="efbtn-name">Cool</div></button>
-          <button class="efbtn" data-filter="vintage"><div class="efbtn-preview" style="background:linear-gradient(135deg,#c8a878,#8a6840)"></div><div class="efbtn-name">Vintage</div></button>
-          <button class="efbtn" data-filter="bw"><div class="efbtn-preview" style="background:linear-gradient(135deg,#fff,#000)"></div><div class="efbtn-name">B&W</div></button>
-          <button class="efbtn" data-filter="vivid"><div class="efbtn-preview" style="background:linear-gradient(135deg,#ff4080,#40c0ff)"></div><div class="efbtn-name">Vivid</div></button>
-          <button class="efbtn" data-filter="matte"><div class="efbtn-preview" style="background:linear-gradient(135deg,#a0a0b0,#606070)"></div><div class="efbtn-name">Matte</div></button>
-          <button class="efbtn" data-filter="noir"><div class="efbtn-preview" style="background:linear-gradient(135deg,#333,#111)"></div><div class="efbtn-name">Noir</div></button>
-          <button class="efbtn" data-filter="golden"><div class="efbtn-preview" style="background:linear-gradient(135deg,#ffd700,#b8860b)"></div><div class="efbtn-name">Golden</div></button>
-          <button class="efbtn" data-filter="cinematic"><div class="efbtn-preview" style="background:linear-gradient(135deg,#1a3a5c,#0a1a2c)"></div><div class="efbtn-name">Cinema</div></button>
-          <button class="efbtn" data-filter="dreamy"><div class="efbtn-preview" style="background:linear-gradient(135deg,#e0c0f0,#c0a0e0)"></div><div class="efbtn-name">Dreamy</div></button>
-          <button class="efbtn" data-filter="highcon"><div class="efbtn-preview" style="background:linear-gradient(135deg,#fff,#000 50%,#fff)"></div><div class="efbtn-name">Hi-Con</div></button>
           <button class="efbtn" data-filter="melanin"><div class="efbtn-preview" style="background:linear-gradient(135deg,#d06030,#8b3010)"></div><div class="efbtn-name">Melanin</div></button>
           <button class="efbtn" data-filter="bronze"><div class="efbtn-preview" style="background:linear-gradient(135deg,#c88040,#7a4010)"></div><div class="efbtn-name">Bronze</div></button>
           <button class="efbtn" data-filter="sunkiss"><div class="efbtn-preview" style="background:linear-gradient(135deg,#ffb830,#d05010)"></div><div class="efbtn-name">Sun Kiss</div></button>
-          <button class="efbtn" data-filter="glow"><div class="efbtn-preview" style="background:linear-gradient(135deg,#ffd490,#e89050)"></div><div class="efbtn-name">Glow</div></button>
-          <button class="efbtn" data-filter="deep"><div class="efbtn-preview" style="background:linear-gradient(135deg,#6a1800,#2a0800)"></div><div class="efbtn-name">Deep</div></button>
+          <button class="efbtn" data-filter="cinematic"><div class="efbtn-preview" style="background:linear-gradient(135deg,#1a3a5c,#0a1a2c)"></div><div class="efbtn-name">Cinema</div></button>
+          <button class="efbtn" data-filter="bw"><div class="efbtn-preview" style="background:linear-gradient(135deg,#fff,#000)"></div><div class="efbtn-name">B&W</div></button>
+          <button class="efbtn" data-filter="vivid"><div class="efbtn-preview" style="background:linear-gradient(135deg,#ff4080,#40c0ff)"></div><div class="efbtn-name">Vivid</div></button>
+          <button class="efbtn" data-filter="vintage"><div class="efbtn-preview" style="background:linear-gradient(135deg,#c8a878,#8a6840)"></div><div class="efbtn-name">Vintage</div></button>
           <button class="efbtn" data-filter="softblur"><div class="efbtn-preview" style="background:linear-gradient(135deg,#b0b8c8,#8090a8);filter:blur(1px)"></div><div class="efbtn-name">Soft</div></button>
+          <button class="efbtn" data-filter="slim"><div class="efbtn-preview" style="background:linear-gradient(135deg,#a060d0,#6030a0)"></div><div class="efbtn-name">Slim</div></button>
         </div>
         <div class="og filter-intensity"><div class="oh">Intensity <span class="ov" id="fiV">100%</span></div><input type="range" id="fiR" min="0" max="100" step="5" value="100"></div>
+
+        <div class="hr"></div>
+        <div class="lb">Adjustments</div>
+        <div class="adj-row"><span class="lb" style="min-width:52px">Bright</span><input type="range" id="brR" min="50" max="150" step="5" value="100"><span class="adj-ov" id="brV">100%</span></div>
+        <div class="adj-row"><span class="lb" style="min-width:52px">Contrast</span><input type="range" id="cnR" min="50" max="200" step="5" value="100"><span class="adj-ov" id="cnV">100%</span></div>
+        <div class="adj-row"><span class="lb" style="min-width:52px">Saturate</span><input type="range" id="saR" min="0" max="200" step="10" value="100"><span class="adj-ov" id="saV">100%</span></div>
+        <div class="tool-row" style="margin-top:4px">
+          <button class="tool-btn" id="flipH">⇆ Flip</button>
+          <button class="tool-btn" id="adjReset">↺ Reset</button>
+        </div>
 
         <div class="hr"></div>
         <div class="lb">Caption Style</div>
@@ -377,7 +394,10 @@ This script will:
         </div>
 
         <div class="hr"></div>
-        <div class="lb">Captions <span style="color:var(--txd);font-weight:400;text-transform:none;letter-spacing:0">(from script — editable)</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="lb">Captions <span style="color:var(--txd);font-weight:400;text-transform:none;letter-spacing:0">(click ▶ to seek)</span></div>
+          <div class="cap-nav"><button class="cap-nav-btn" id="capPrev">◀ Prev</button><button class="cap-nav-btn" id="capNext">Next ▶</button></div>
+        </div>
         <div class="clist" id="cL"></div>
         <button class="acb" id="aC">+ Add Caption</button>
 
@@ -423,29 +443,24 @@ const S={
   caps:[],preset:'classic',
   cs:{font:'Outfit',size:10,pos:'bottom',pad:8},
   ts:0,te:0,vd:0,
-  filter:'none',filterIntensity:100
+  filter:'none',filterIntensity:100,
+  adj:{brightness:100,contrast:100,saturation:100,flipH:false}
 };
 
 // CSS filter definitions (used for live preview) and canvas filter functions (for export)
 const FILTERS={
-  none:{css:'none',apply:(ctx,w,h,intensity)=>{}},
+  none:{css:'none',apply:(ctx,w,h,i)=>{}},
   warm:{css:'sepia(0.3) saturate(1.4) brightness(1.05)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(255,140,50,${0.12*i})`;ctx.fillRect(0,0,w,h)}},
   cool:{css:'saturate(0.9) brightness(1.05) hue-rotate(15deg)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(50,100,200,${0.12*i})`;ctx.fillRect(0,0,w,h)}},
-  vintage:{css:'sepia(0.5) contrast(0.9) brightness(0.95) saturate(0.8)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(160,120,60,${0.18*i})`;ctx.fillRect(0,0,w,h)}},
-  bw:{css:'grayscale(1) contrast(1.1)',apply:(ctx,w,h,i)=>{const id=ctx.getImageData(0,0,w,h);const d=id.data;for(let p=0;p<d.length;p+=4){const g=Math.round(d[p]*.3+d[p+1]*.59+d[p+2]*.11);const m=i;d[p]=d[p]*(1-m)+g*m;d[p+1]=d[p+1]*(1-m)+g*m;d[p+2]=d[p+2]*(1-m)+g*m}ctx.putImageData(id,0,0)}},
-  vivid:{css:'saturate(1.8) contrast(1.1) brightness(1.05)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(200,50,100,${0.06*i})`;ctx.fillRect(0,0,w,h)}},
-  matte:{css:'contrast(0.85) brightness(1.1) saturate(0.85)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(180,180,200,${0.1*i})`;ctx.fillRect(0,0,w,h)}},
-  noir:{css:'grayscale(0.8) contrast(1.4) brightness(0.85)',apply:(ctx,w,h,i)=>{const id=ctx.getImageData(0,0,w,h);const d=id.data;for(let p=0;p<d.length;p+=4){const g=d[p]*.3+d[p+1]*.59+d[p+2]*.11;const m=0.8*i;d[p]=d[p]*(1-m)+g*m*1.1;d[p+1]=d[p+1]*(1-m)+g*m*0.95;d[p+2]=d[p+2]*(1-m)+g*m*0.95;d[p]=Math.min(255,d[p]*1.2);d[p+1]=Math.min(255,d[p+1]*0.9);d[p+2]=Math.min(255,d[p+2]*0.9)}ctx.putImageData(id,0,0)}},
-  golden:{css:'sepia(0.35) saturate(1.5) brightness(1.1) hue-rotate(-10deg)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(255,200,50,${0.15*i})`;ctx.fillRect(0,0,w,h)}},
-  cinematic:{css:'contrast(1.15) brightness(0.9) saturate(0.85)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(20,50,80,${0.18*i})`;ctx.fillRect(0,0,w,h);ctx.fillStyle=`rgba(0,0,0,${0.08*i})`;ctx.fillRect(0,0,w,h*0.08);ctx.fillRect(0,h*0.92,w,h*0.08)}},
-  dreamy:{css:'brightness(1.1) contrast(0.9) saturate(1.2) blur(0.4px)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(200,160,240,${0.1*i})`;ctx.fillRect(0,0,w,h)}},
-  highcon:{css:'contrast(1.5) brightness(1.05) saturate(1.1)',apply:(ctx,w,h,i)=>{}},
   melanin:{css:'brightness(1.05) contrast(1.15) saturate(1.45)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(220,100,30,${0.07*i})`;ctx.fillRect(0,0,w,h)}},
   bronze:{css:'sepia(0.18) contrast(1.22) saturate(1.7) brightness(1.05)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(180,90,20,${0.12*i})`;ctx.fillRect(0,0,w,h)}},
   sunkiss:{css:'brightness(1.12) saturate(1.3) hue-rotate(-8deg)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(255,170,50,${0.1*i})`;ctx.fillRect(0,0,w,h)}},
-  glow:{css:'brightness(1.18) contrast(0.92) saturate(1.18)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(255,190,130,${0.08*i})`;ctx.fillRect(0,0,w,h)}},
-  deep:{css:'contrast(1.32) saturate(1.6) brightness(0.9)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(80,15,0,${0.1*i})`;ctx.fillRect(0,0,w,h)}},
-  softblur:{css:'blur(0.8px) brightness(1.05) saturate(1.1)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(255,255,255,${0.03*i})`;ctx.fillRect(0,0,w,h)}}
+  cinematic:{css:'contrast(1.15) brightness(0.9) saturate(0.85)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(20,50,80,${0.18*i})`;ctx.fillRect(0,0,w,h);ctx.fillStyle=`rgba(0,0,0,${0.08*i})`;ctx.fillRect(0,0,w,h*0.08);ctx.fillRect(0,h*0.92,w,h*0.08)}},
+  bw:{css:'grayscale(1) contrast(1.1)',apply:(ctx,w,h,i)=>{const id=ctx.getImageData(0,0,w,h);const d=id.data;for(let p=0;p<d.length;p+=4){const g=Math.round(d[p]*.3+d[p+1]*.59+d[p+2]*.11);d[p]=d[p]*(1-i)+g*i;d[p+1]=d[p+1]*(1-i)+g*i;d[p+2]=d[p+2]*(1-i)+g*i}ctx.putImageData(id,0,0)}},
+  vivid:{css:'saturate(1.8) contrast(1.1) brightness(1.05)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(200,50,100,${0.06*i})`;ctx.fillRect(0,0,w,h)}},
+  vintage:{css:'sepia(0.5) contrast(0.9) brightness(0.95) saturate(0.8)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(160,120,60,${0.18*i})`;ctx.fillRect(0,0,w,h)}},
+  softblur:{css:'blur(0.8px) brightness(1.05) saturate(1.1)',apply:(ctx,w,h,i)=>{ctx.fillStyle=`rgba(255,255,255,${0.03*i})`;ctx.fillRect(0,0,w,h)}},
+  slim:{css:'none',apply:(ctx,w,h,i)=>{}}
 };
 
 function getCSSFilter(name,intensity){
@@ -525,13 +540,28 @@ document.querySelectorAll('#edFilters .efbtn').forEach(b=>b.addEventListener('cl
 // Intensity slider
 $('fiR').addEventListener('input',e=>{S.filterIntensity=parseInt(e.target.value);$('fiV').textContent=S.filterIntensity+'%';applyEditorFilter();renderCapOv(eV.currentTime||0)});
 
+function getAdjCSS(){
+  const a=S.adj;
+  if(a.brightness===100&&a.contrast===100&&a.saturation===100)return'';
+  return`brightness(${a.brightness}%) contrast(${a.contrast}%) saturate(${a.saturation}%)`;
+}
 function applyLiveFilter(){
   const vf=$('vf');
-  vf.style.filter=getCSSFilter(S.filter,S.filterIntensity);
+  const cf=getCSSFilter(S.filter,S.filterIntensity);
+  const af=getAdjCSS();
+  vf.style.filter=[af,cf].filter(f=>f&&f!=='none').join(' ')||'none';
+  const slim=S.filter==='slim'?0.88:1;
+  const mirrorX=vf.classList.contains('nm')?1:-1;
+  vf.style.transform=`scaleX(${mirrorX*slim})`;
 }
 function applyEditorFilter(){
   const ev=$('eV');
-  ev.style.filter=getCSSFilter(S.filter,S.filterIntensity);
+  const cf=getCSSFilter(S.filter,S.filterIntensity);
+  const af=getAdjCSS();
+  ev.style.filter=[af,cf].filter(f=>f&&f!=='none').join(' ')||'none';
+  const slim=S.filter==='slim'?0.88:1;
+  const flip=S.adj.flipH?-1:1;
+  ev.style.transform=`scaleX(${slim*flip})`;
 }
 
 // ══════════ STEP 2 ══════════
@@ -576,8 +606,8 @@ function runCd(n){$('cdN').textContent=n;$('cdV').classList.add('on');const iv=s
 function togPl(){S.playing=!S.playing;if(S.playing){$('plB').textContent='⏸';if(!S.recording)$('rB').className='rb pau';S.lT=performance.now();S.tIv=setInterval(()=>{S.elapsed++;$('tDs').textContent=fmt(S.elapsed)},1000);tk()}else{$('plB').textContent='▶';if(!S.recording)$('rB').className='rb idle';clearInterval(S.tIv);cancelAnimationFrame(S.aId)}}
 function tk(){if(!S.playing)return;const n=performance.now(),d=(n-S.lT)/1000;S.lT=n;S.scrollPos+=S.speed*30*d;const mx=$('txS').scrollHeight-$('pA').clientHeight;if(S.scrollPos>=mx){S.scrollPos=mx;S.playing=false;$('plB').textContent='▶';clearInterval(S.tIv);if(S.recording)toast('Script done — recording continues')}$('txS').style.transform=(S.mirror?'scaleX(-1) ':'')+'translateY(-'+S.scrollPos+'px)';const p=mx>0?Math.min(100,S.scrollPos/mx*100):0;$('pF').style.width=p+'%';$('pcT').textContent=Math.round(p)+'%';S.aId=requestAnimationFrame(tk)}
 $('plB').addEventListener('click',togPl);
-$('sUp').addEventListener('click',()=>{S.speed=Math.min(8,S.speed+.5);$('lS').textContent=S.speed.toFixed(1)+'×'});
-$('sDn').addEventListener('click',()=>{S.speed=Math.max(.5,S.speed-.5);$('lS').textContent=S.speed.toFixed(1)+'×'});
+$('sUp').addEventListener('click',()=>{S.speed=Math.min(8,Math.round((S.speed+.1)*10)/10);$('lS').textContent=S.speed.toFixed(1)+'×'});
+$('sDn').addEventListener('click',()=>{S.speed=Math.max(.1,Math.round((S.speed-.1)*10)/10);$('lS').textContent=S.speed.toFixed(1)+'×'});
 $('rB2').addEventListener('click',()=>{S.scrollPos=0;$('txS').style.transform=(S.mirror?'scaleX(-1) ':'')+'translateY(0px)';S.elapsed=0;$('tDs').textContent='00:00';$('pF').style.width='0%';$('pcT').textContent='0%';if(S.playing)togPl()});
 
 $('rcB').addEventListener('click',togRc);
@@ -657,38 +687,35 @@ function loadVB(blob,rd){
 
 // ═══ SMART AUTO-CAPTION ═══
 function autoCap(script,dur){
-  // Split by lines, then by sentences, keeping each segment short
-  const lines=script.split(/\n/).filter(l=>l.trim());
-  let segs=[];
+  const lines=script.split(/\n+/);
+  let chunks=[];
   lines.forEach(line=>{
-    const trimmed=line.trim();
-    if(!trimmed)return;
-    // If line is short enough (under ~10 words), keep as one caption
+    const trimmed=line.trim();if(!trimmed)return;
     const words=trimmed.split(/\s+/);
-    if(words.length<=10){segs.push(trimmed)}
-    else{
-      // Split into chunks of ~6-8 words
-      for(let i=0;i<words.length;i+=7){
-        segs.push(words.slice(i,i+7).join(' '));
+    let cur=[];
+    words.forEach(w=>{
+      cur.push(w);
+      const sentEnd=/[.!?]$/.test(w);
+      const phraseEnd=/[,;]$/.test(w);
+      if((sentEnd&&cur.length>=2)||(phraseEnd&&cur.length>=4)||(cur.length>=5)){
+        chunks.push(cur.join(' '));cur=[];
       }
-    }
+    });
+    if(cur.length)chunks.push(cur.join(' '));
   });
-  if(!segs.length)segs=[script];
+  if(!chunks.length)chunks=[script.trim()];
 
-  // Calculate timing: distribute with small gaps
-  const gap=0.15;
-  const totalTime=dur-gap*(segs.length-1);
-  // Weight by word count for natural pacing
-  const totalWords=segs.reduce((a,s)=>a+s.split(/\s+/).length,0);
+  const gap=0.12;
+  const totalTime=Math.max(1,dur-gap*Math.max(0,chunks.length-1));
+  const totalWords=chunks.reduce((a,s)=>a+s.split(/\s+/).length,0)||1;
   let t=0;
-  S.caps=segs.map((text,i)=>{
+  S.caps=chunks.map((text,i)=>{
     const wc=text.split(/\s+/).length;
-    const segDur=Math.max(0.8,(wc/totalWords)*totalTime);
-    const cap={id:i+1,start:t,end:t+segDur,text};
+    const segDur=Math.max(0.6,(wc/totalWords)*totalTime);
+    const cap={id:i+1,start:parseFloat(t.toFixed(2)),end:parseFloat((t+segDur).toFixed(2)),text};
     t+=segDur+gap;
     return cap;
   });
-
   renderCL();renderCM();
   toast(S.caps.length+' captions synced');
 }
@@ -704,10 +731,30 @@ $('cSz').addEventListener('input',e=>{S.cs.size=parseInt(e.target.value);renderC
 $('cPo').addEventListener('change',e=>{S.cs.pos=e.target.value;renderCapOv(eV.currentTime||0)});
 $('cPd').addEventListener('input',e=>{S.cs.pad=parseInt(e.target.value);renderCapOv(eV.currentTime||0)});
 
+// Adjustment sliders
+[['brR','brV','brightness'],['cnR','cnV','contrast'],['saR','saV','saturation']].forEach(([rid,vid,key])=>{
+  $(rid).addEventListener('input',e=>{S.adj[key]=parseInt(e.target.value);$(vid).textContent=S.adj[key]+'%';applyEditorFilter();renderCapOv(eV.currentTime||0)});
+});
+$('flipH').addEventListener('click',()=>{S.adj.flipH=!S.adj.flipH;$('flipH').classList.toggle('on',S.adj.flipH);applyEditorFilter()});
+$('adjReset').addEventListener('click',()=>{S.adj={brightness:100,contrast:100,saturation:100,flipH:false};['brR','cnR','saR'].forEach(id=>$(id).value=100);['brV','cnV','saV'].forEach(id=>$(id).textContent='100%');$('flipH').classList.remove('on');applyEditorFilter()});
+
+// Caption navigation
+$('capPrev').addEventListener('click',()=>{const t=eV.currentTime||0;const prev=[...S.caps].reverse().find(c=>c.start<t-0.05);if(prev){eV.currentTime=prev.start;renderCapOv(prev.start)}else if(S.caps.length){eV.currentTime=S.caps[0].start;renderCapOv(S.caps[0].start)}});
+$('capNext').addEventListener('click',()=>{const t=eV.currentTime||0;const next=S.caps.find(c=>c.start>t+0.05);if(next){eV.currentTime=next.start;renderCapOv(next.start)}});
+
 function renderCL(){const cl=$('cL');cl.innerHTML='';
 S.caps.forEach((c,i)=>{const d=document.createElement('div');d.className='ci';d.dataset.id=c.id;
-d.innerHTML=`<div class="ct"><span>In:</span><input type="text" value="${fmt(c.start)}" data-i="${i}" data-f="s"><span>→</span><input type="text" value="${fmt(c.end)}" data-i="${i}" data-f="e"></div><textarea class="cx" data-i="${i}" rows="1">${c.text}</textarea><button class="cd" data-i="${i}">✕</button>`;
+d.innerHTML=`<div class="ct"><button class="cseek" data-i="${i}" title="Jump to caption">▶</button><span>In:</span><input type="text" value="${fmt(c.start)}" data-i="${i}" data-f="s"><span>Out:</span><input type="text" value="${fmt(c.end)}" data-i="${i}" data-f="e"><button class="csplit" data-i="${i}" title="Split at playhead">✂</button></div><textarea class="cx" data-i="${i}" rows="1">${c.text}</textarea><button class="cd" data-i="${i}">✕</button>`;
 cl.appendChild(d)});
+cl.querySelectorAll('.cseek').forEach(el=>el.addEventListener('click',e=>{const i=parseInt(e.target.dataset.i);eV.currentTime=S.caps[i].start;renderCapOv(S.caps[i].start)}));
+cl.querySelectorAll('.csplit').forEach(el=>el.addEventListener('click',e=>{
+  const i=parseInt(e.target.dataset.i);const t=eV.currentTime;const cap=S.caps[i];
+  if(t<=cap.start||t>=cap.end){toast('Move playhead inside this caption first');return}
+  const words=cap.text.trim().split(/\s+/);if(words.length<2){toast('Too short to split');return}
+  const ratio=(t-cap.start)/(cap.end-cap.start);const sp=Math.max(1,Math.round(words.length*ratio));
+  S.caps.splice(i,1,{id:Date.now(),start:cap.start,end:parseFloat(t.toFixed(2)),text:words.slice(0,sp).join(' ')},{id:Date.now()+1,start:parseFloat(t.toFixed(2)),end:cap.end,text:words.slice(sp).join(' ')});
+  renderCL();renderCM();toast('Split!');
+}));
 cl.querySelectorAll('.cx').forEach(el=>el.addEventListener('input',e=>{S.caps[e.target.dataset.i].text=e.target.value;renderCapOv(eV.currentTime||0)}));
 cl.querySelectorAll('.ct input').forEach(el=>el.addEventListener('change',e=>{const i=e.target.dataset.i;if(e.target.dataset.f==='s')S.caps[i].start=pT(e.target.value);else S.caps[i].end=pT(e.target.value);renderCM()}));
 cl.querySelectorAll('.cd').forEach(el=>el.addEventListener('click',e=>{S.caps.splice(parseInt(e.target.dataset.i),1);renderCL();renderCM()}))}
@@ -755,6 +802,7 @@ function renderCapOv(t){
   ov.style.transform=S.cs.pos==='center'?'translate(-50%,50%)':'translateX(-50%)';
   ov.innerHTML=ac.map(c=>`<div>${pr.uppercase?c.text.toUpperCase():c.text}</div>`).join('');
   document.querySelectorAll('.ci').forEach(el=>el.classList.toggle('act',ac.some(c=>c.id===parseInt(el.dataset.id))));
+  const actEl=document.querySelector('.ci.act');if(actEl)actEl.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 // ═══ EXPORT — CANVAS-BURNED MP4 ═══
@@ -814,10 +862,16 @@ async function expVid(){
 
     const rf=()=>{
       if(eV.currentTime>=S.te||eV.paused){eV.pause();rec.stop();return}
-      ctx.drawImage(eV,0,0,w,h);
+      // Apply adjustments + slim via ctx.filter before drawing
+      const adjStr=`brightness(${S.adj.brightness}%) contrast(${S.adj.contrast}%) saturate(${S.adj.saturation}%)`;
+      ctx.save();ctx.filter=adjStr;
+      if(S.filter==='slim'){
+        const sl=Math.round(w*0.06);ctx.drawImage(eV,sl,0,w-sl*2,h,0,0,w,h);
+      }else{ctx.drawImage(eV,0,0,w,h)}
+      ctx.filter='none';ctx.restore();
 
-      // Apply video filter
-      if(S.filter!=='none'&&FILTERS[S.filter]){
+      // Apply color filter overlay
+      if(S.filter!=='none'&&S.filter!=='slim'&&FILTERS[S.filter]){
         const fi=S.filterIntensity/100;
         ctx.save();
         ctx.globalCompositeOperation='source-over';
