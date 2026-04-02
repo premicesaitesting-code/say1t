@@ -1,0 +1,9 @@
+{
+  "name": "clip2post",
+  "version": "1.0.0",
+  "description": "Script, Record, Caption & Post — for Instagram Reels & TikTok",
+  "scripts": {
+    "dev": "npx serve public -l 3000",
+    "start": "npx serve public -l 3000"
+  }
+}
