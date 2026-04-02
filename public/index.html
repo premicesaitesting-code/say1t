@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b0b14">
-<title>Clip2Post</title>
+<title>Clip1t</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -227,7 +227,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 <body>
 <div class="app">
 <div class="fnav">
-  <div class="logo"><div class="lm"><svg viewBox="0 0 24 24"><polygon points="9,6 9,18 19,12"/></svg></div>Clip2Post</div>
+  <div class="logo"><div class="lm"><svg viewBox="0 0 24 24"><polygon points="9,6 9,18 19,12"/></svg></div>Clip1t</div>
   <div class="steps">
     <div class="stp act" data-s="s1"><span class="sn">1</span><span>Write</span></div><span class="sa">›</span>
     <div class="stp" data-s="s2"><span class="sn">2</span><span>Record</span></div><span class="sa">›</span>
@@ -598,7 +598,7 @@ function onRS(){
   const u=URL.createObjectURL(blob);
   const ext=mime.includes('mp4')?'mp4':'webm';
   const a=document.createElement('a');a.href=u;
-  a.download='Clip2Post_'+Date.now()+'.'+ext;
+  a.download='Clip1t_'+Date.now()+'.'+ext;
   document.body.appendChild(a);a.click();
   setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(u)},3000);
   // Load into editor
@@ -776,7 +776,7 @@ async function expVid(){
       if(!chunks.length){$('eSt').textContent='No data exported';$('eBtn').disabled=false;res();return}
       const ext=isMP4?'mp4':'webm';
       const blob=new Blob(chunks,{type:mime||'video/webm'});const u=URL.createObjectURL(blob);
-      const a=document.createElement('a');a.href=u;a.download='Clip2Post_Final_'+Date.now()+'.'+ext;
+      const a=document.createElement('a');a.href=u;a.download='Clip1t_Final_'+Date.now()+'.'+ext;
       document.body.appendChild(a);a.click();
       setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(u)},3000);res()}});
 

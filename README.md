@@ -1,11 +1,11 @@
-# Clip2Post
+# Clip1t
 
 Script, Record, Caption & Post — for Instagram Reels & TikTok.
 
 ## Quick Start
 
 ```bash
-cd clip2post
+cd clip1t
 npx serve public
 ```
 
