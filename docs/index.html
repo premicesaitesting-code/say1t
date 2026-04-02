@@ -237,13 +237,48 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 
 /* Adj section */
 .adj-row{display:flex;align-items:center;gap:6px}
-.adj-row .lb{min-width:60px}
+.adj-row .lb{min-width:52px}
 .adj-row input[type=range]{flex:1}
 .adj-ov{font-family:var(--mo);font-size:9px;color:var(--acc);background:rgba(255,85,53,.08);padding:1px 4px;border-radius:3px;min-width:32px;text-align:right}
 .tool-row{display:flex;gap:4px;flex-wrap:wrap}
 .tool-btn{padding:4px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:5px;color:var(--txd);font-size:9px;font-weight:600;cursor:pointer;transition:all .12s}
 .tool-btn:hover{border-color:var(--acc);color:var(--acc)}
 .tool-btn.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+
+/* Tabs */
+.tab-nav{display:flex;gap:1px;background:var(--s1);border-bottom:1px solid var(--bd);flex-shrink:0;margin:-10px -12px 0}
+.tab-btn{flex:1;padding:9px 4px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--txd);font-size:10px;font-weight:700;cursor:pointer;transition:all .15s;font-family:var(--f);letter-spacing:.3px}
+.tab-btn.on{color:var(--acc);border-bottom-color:var(--acc);background:rgba(255,85,53,.04)}
+.tab-pane{display:none;flex-direction:column;gap:8px;padding-top:10px;flex:1;overflow-y:auto;min-height:0}
+.tab-pane.on{display:flex}
+
+/* Caption timeline */
+.ctl{position:relative;height:48px;background:var(--s1);border:1px solid var(--bd);border-radius:6px;overflow:hidden;cursor:crosshair;flex-shrink:0;user-select:none}
+.ctl-empty{display:flex;align-items:center;justify-content:center;height:100%;font-size:9px;color:var(--txd);font-family:var(--mo);pointer-events:none}
+.ctlhd{position:absolute;top:0;bottom:0;width:2px;background:var(--acc);pointer-events:none;z-index:10;box-shadow:0 0 6px var(--acc);transition:left .05s linear}
+.cb2{position:absolute;top:4px;bottom:4px;background:rgba(255,85,53,.18);border:1px solid rgba(255,85,53,.45);border-radius:3px;overflow:hidden;cursor:pointer;min-width:4px;box-sizing:border-box}
+.cb2.cur{background:rgba(255,85,53,.3);border-color:rgba(255,85,53,.7)}
+.cb2.sel{background:rgba(255,85,53,.5);border-color:#fff;z-index:5}
+.cb2-txt{font-size:7px;color:rgba(255,255,255,.75);padding:2px 8px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;user-select:none}
+.cb2-hl{position:absolute;top:0;bottom:0;width:8px;cursor:ew-resize;z-index:6;display:flex;align-items:center;justify-content:center}
+.cb2-hl::after{content:'';width:2px;height:12px;background:rgba(255,255,255,.5);border-radius:1px;pointer-events:none}
+.cb2-l{left:0}.cb2-r{right:0}
+
+/* Caption selected editor */
+.csel-ed{background:var(--s2);border:1px solid var(--bd);border-radius:6px;padding:8px;display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.cse-hd{display:flex;justify-content:space-between;align-items:center;gap:4px}
+.cse-lbl{font-size:9px;font-weight:600;color:var(--txd);font-family:var(--mo)}
+.cse-lbl.has{color:var(--tx)}
+.cap-big{resize:none;background:var(--s1);border:1px solid var(--bd);border-radius:5px;padding:7px 9px;color:var(--tx);font-family:var(--f);font-size:14px;line-height:1.5;outline:none;width:100%;min-height:56px;transition:border .15s;box-sizing:border-box}
+.cap-big:focus{border-color:var(--acc);box-shadow:0 0 0 2px var(--ag)}
+.cap-big:disabled{opacity:.35;cursor:default}
+.cse-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.ct-in{width:44px;background:var(--s3);border:1px solid var(--bd);border-radius:3px;padding:2px 4px;color:var(--tx);font-family:var(--mo);font-size:9px;outline:none;text-align:center}
+.ct-in:focus{border-color:var(--acc)}
+
+/* Cut zone on trim timeline */
+.cut-zone{position:absolute;top:0;bottom:0;background:rgba(244,63,94,.2);border-left:2px solid var(--rd);border-right:2px solid var(--rd);pointer-events:none;z-index:4;display:none}
+.cut-zone.sh{display:block}
 </style>
 </head>
 <body>
@@ -344,7 +379,16 @@ This script will:
         <div class="cov" id="cOv"></div>
       </div>
       <div class="esb" id="eSb">
-        <div class="lb">Video Filter</div>
+        <!-- TABS -->
+        <div class="tab-nav">
+          <button class="tab-btn on" data-tab="t-video">Video</button>
+          <button class="tab-btn" data-tab="t-caps">Captions</button>
+          <button class="tab-btn" data-tab="t-edit">Edit</button>
+        </div>
+
+        <!-- VIDEO TAB -->
+        <div class="tab-pane on" id="t-video">
+        <div class="lb">Filter</div>
         <div class="filter-grid" id="edFilters">
           <button class="efbtn on" data-filter="none"><div class="efbtn-preview" style="background:linear-gradient(135deg,#888,#aaa)"></div><div class="efbtn-name">None</div></button>
           <button class="efbtn" data-filter="warm"><div class="efbtn-preview" style="background:linear-gradient(135deg,#e8a040,#d45020)"></div><div class="efbtn-name">Warm</div></button>
@@ -370,8 +414,10 @@ This script will:
           <button class="tool-btn" id="flipH">⇆ Flip</button>
           <button class="tool-btn" id="adjReset">↺ Reset</button>
         </div>
+        </div><!-- /t-video -->
 
-        <div class="hr"></div>
+        <!-- CAPTIONS TAB -->
+        <div class="tab-pane" id="t-caps">
         <div class="lb">Caption Style</div>
         <div class="presets" id="presets">
           <div class="preset pp-classic on" data-preset="classic"><div class="preset-preview">Aa</div><div class="preset-name">Classic</div></div>
@@ -394,22 +440,49 @@ This script will:
         </div>
 
         <div class="hr"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div class="lb">Captions <span style="color:var(--txd);font-weight:400;text-transform:none;letter-spacing:0">(click ▶ to seek)</span></div>
-          <div class="cap-nav"><button class="cap-nav-btn" id="capPrev">◀ Prev</button><button class="cap-nav-btn" id="capNext">Next ▶</button></div>
+        <div class="lb">Caption Timeline <span style="color:var(--txd);font-weight:400;text-transform:none;letter-spacing:0;font-size:8px">— drag edges to resize</span></div>
+        <div class="ctl" id="ctlK"><div class="ctl-empty">No captions yet</div><div class="ctlhd" id="ctlH" style="left:0%"></div></div>
+        <div class="csel-ed" id="cSelEd">
+          <div class="cse-hd">
+            <span class="cse-lbl" id="cseLabel">Select a caption to edit</span>
+            <div style="display:flex;gap:3px">
+              <button class="cap-nav-btn" id="capPrev" title="Prev">◀</button>
+              <button class="cap-nav-btn" id="capNext" title="Next">▶</button>
+            </div>
+          </div>
+          <textarea class="cap-big" id="cseText" rows="2" disabled placeholder="Select a caption to edit its text…"></textarea>
+          <div class="cse-row">
+            <span style="font-size:9px;color:var(--txd)">In</span>
+            <input class="ct-in" id="cseS" type="text" placeholder="0:00" disabled>
+            <span style="font-size:9px;color:var(--txd)">Out</span>
+            <input class="ct-in" id="cseE" type="text" placeholder="0:00" disabled>
+            <button class="tool-btn" id="cseSplit" title="Split at playhead" disabled>✂ Split</button>
+            <button class="tool-btn" id="cseDel" style="color:var(--rd)" disabled>✕</button>
+          </div>
         </div>
-        <div class="clist" id="cL"></div>
-        <button class="acb" id="aC">+ Add Caption</button>
+        <button class="acb" id="aC">+ Add Caption at Playhead</button>
+        </div><!-- /t-caps -->
 
-        <div class="hr"></div>
+        <!-- EDIT TAB -->
+        <div class="tab-pane" id="t-edit">
         <div class="lb">Trim</div>
         <div class="tln"><span>In: <b id="trS">0:00</b></span><span>Out: <b id="trE">0:00</b></span></div>
-
+        <div class="hr"></div>
+        <div class="lb">Remove Section</div>
+        <div class="tln"><span>Start: <b id="cutSL">--</b></span><span>End: <b id="cutEL">--</b></span></div>
+        <div class="tool-row">
+          <button class="tool-btn" id="markCutS">Mark Start</button>
+          <button class="tool-btn" id="markCutE">Mark End</button>
+          <button class="tool-btn" id="clearCut" style="color:var(--rd)">✕ Clear</button>
+        </div>
+        <p style="font-size:8px;color:var(--txd);line-height:1.5;font-family:var(--mo)">Mark a section to remove from the export. The cut region shows in red on the timeline.</p>
+        <div class="hr"></div>
         <div class="exs">
           <div class="exp" id="ePr"><div class="exf" id="eFl"></div></div>
           <div class="exts" id="eSt"></div>
           <button class="exb" id="eBtn" disabled>⬇ Export MP4 with Captions</button>
         </div>
+        </div><!-- /t-edit -->
       </div>
     </div>
     <div class="tline">
@@ -419,6 +492,7 @@ This script will:
         <div class="tlk" id="tlK">
           <div class="tlpg" id="tlG"></div>
           <div id="cMs"></div>
+          <div class="cut-zone" id="cutZ"></div>
           <div class="tlhd" id="tlH" style="left:0%"></div>
           <div class="trr" id="tRg" style="left:0%;width:100%">
             <div class="trh trhl" id="tL"></div>
@@ -444,7 +518,8 @@ const S={
   cs:{font:'Outfit',size:10,pos:'bottom',pad:8},
   ts:0,te:0,vd:0,
   filter:'none',filterIntensity:100,
-  adj:{brightness:100,contrast:100,saturation:100,flipH:false}
+  adj:{brightness:100,contrast:100,saturation:100,flipH:false},
+  cut:{start:null,end:null}
 };
 
 // CSS filter definitions (used for live preview) and canvas filter functions (for export)
@@ -675,9 +750,10 @@ $('vU').addEventListener('change',e=>{const f=e.target.files[0];if(f)loadVB(f)})
 
 function loadVB(blob,rd){
   const u=URL.createObjectURL(blob);eV.src=u;eV.style.display='block';$('nV').style.display='none';
-  eV.onloadedmetadata=()=>{S.vd=eV.duration||(rd||30);S.ts=0;S.te=S.vd;
+  eV.onloadedmetadata=()=>{S.vd=eV.duration||(rd||30);S.ts=0;S.te=S.vd;S.cut={start:null,end:null};
   $('tlD').textContent=fmt(S.vd);$('trE').textContent=fmt(S.vd);$('trS').textContent='0:00';
   $('tRg').style.left='0%';$('tRg').style.width='100%';$('eBtn').disabled=false;
+  selCap=-1;updateCapSelEd();updateCutUI();renderCapTL();
   if(S.script)autoCap(S.script,S.vd)};
   goStep('s3');
   // Sync filter from prompter to editor
@@ -716,7 +792,7 @@ function autoCap(script,dur){
     t+=segDur+gap;
     return cap;
   });
-  renderCL();renderCM();
+  selCap=-1;renderCapTL();renderCM();updateCapSelEd();
   toast(S.caps.length+' captions synced');
 }
 
@@ -738,35 +814,135 @@ $('cPd').addEventListener('input',e=>{S.cs.pad=parseInt(e.target.value);renderCa
 $('flipH').addEventListener('click',()=>{S.adj.flipH=!S.adj.flipH;$('flipH').classList.toggle('on',S.adj.flipH);applyEditorFilter()});
 $('adjReset').addEventListener('click',()=>{S.adj={brightness:100,contrast:100,saturation:100,flipH:false};['brR','cnR','saR'].forEach(id=>$(id).value=100);['brV','cnV','saV'].forEach(id=>$(id).textContent='100%');$('flipH').classList.remove('on');applyEditorFilter()});
 
-// Caption navigation
-$('capPrev').addEventListener('click',()=>{const t=eV.currentTime||0;const prev=[...S.caps].reverse().find(c=>c.start<t-0.05);if(prev){eV.currentTime=prev.start;renderCapOv(prev.start)}else if(S.caps.length){eV.currentTime=S.caps[0].start;renderCapOv(S.caps[0].start)}});
-$('capNext').addEventListener('click',()=>{const t=eV.currentTime||0;const next=S.caps.find(c=>c.start>t+0.05);if(next){eV.currentTime=next.start;renderCapOv(next.start)}});
+// ═══ CAPTION TIMELINE ═══
+let selCap=-1,capDrag=null;
 
-function renderCL(){const cl=$('cL');cl.innerHTML='';
-S.caps.forEach((c,i)=>{const d=document.createElement('div');d.className='ci';d.dataset.id=c.id;
-d.innerHTML=`<div class="ct"><button class="cseek" data-i="${i}" title="Jump to caption">▶</button><span>In:</span><input type="text" value="${fmt(c.start)}" data-i="${i}" data-f="s"><span>Out:</span><input type="text" value="${fmt(c.end)}" data-i="${i}" data-f="e"><button class="csplit" data-i="${i}" title="Split at playhead">✂</button></div><textarea class="cx" data-i="${i}" rows="1">${c.text}</textarea><button class="cd" data-i="${i}">✕</button>`;
-cl.appendChild(d)});
-cl.querySelectorAll('.cseek').forEach(el=>el.addEventListener('click',e=>{const i=parseInt(e.target.dataset.i);eV.currentTime=S.caps[i].start;renderCapOv(S.caps[i].start)}));
-cl.querySelectorAll('.csplit').forEach(el=>el.addEventListener('click',e=>{
-  const i=parseInt(e.target.dataset.i);const t=eV.currentTime;const cap=S.caps[i];
-  if(t<=cap.start||t>=cap.end){toast('Move playhead inside this caption first');return}
+function renderCapTL(){
+  const tl=$('ctlK');
+  const hd=tl.querySelector('.ctlhd');
+  tl.innerHTML='';tl.appendChild(hd);
+  if(!S.vd||!S.caps.length){tl.insertAdjacentHTML('afterbegin','<div class="ctl-empty">No captions yet</div>');return}
+  S.caps.forEach((cap,i)=>{
+    const left=(cap.start/S.vd)*100;
+    const width=Math.max(0.5,((cap.end-cap.start)/S.vd)*100);
+    const b=document.createElement('div');
+    b.className='cb2'+(i===selCap?' sel':'');
+    b.style.cssText=`left:${left}%;width:${width}%`;
+    b.innerHTML=`<div class="cb2-txt">${cap.text}</div><div class="cb2-hl cb2-l" data-drag="l" data-i="${i}"></div><div class="cb2-hl cb2-r" data-drag="r" data-i="${i}"></div>`;
+    b.addEventListener('pointerdown',ev=>{
+      if(ev.target.dataset.drag){startCapDrag(ev,ev.target.dataset.drag,i);return}
+      selectCap(i);eV.currentTime=cap.start;renderCapOv(cap.start);
+    });
+    tl.appendChild(b);
+  });
+}
+
+function startCapDrag(ev,type,i){
+  ev.stopPropagation();ev.preventDefault();
+  const tl=$('ctlK');const rect=tl.getBoundingClientRect();
+  capDrag={type,i,rect,startStart:S.caps[i].start,startEnd:S.caps[i].end,startX:ev.clientX};
+  tl.setPointerCapture(ev.pointerId);
+  tl.addEventListener('pointermove',onCapDrag);
+  tl.addEventListener('pointerup',endCapDrag,{once:true});
+}
+function onCapDrag(ev){
+  if(!capDrag)return;
+  const dx=ev.clientX-capDrag.startX;
+  const dt=(dx/capDrag.rect.width)*S.vd;
+  const cap=S.caps[capDrag.i];
+  if(capDrag.type==='l'){cap.start=parseFloat(Math.max(0,Math.min(capDrag.startStart+dt,cap.end-0.1)).toFixed(2))}
+  else{cap.end=parseFloat(Math.min(S.vd,Math.max(capDrag.startEnd+dt,cap.start+0.1)).toFixed(2))}
+  renderCapTL();renderCM();renderCapOv(eV.currentTime||0);
+  if(selCap===capDrag.i)updateCapSelEd();
+}
+function endCapDrag(){capDrag=null;$('ctlK').onpointermove=null}
+
+$('ctlK').addEventListener('click',ev=>{
+  if(!S.vd||capDrag)return;
+  const r=$('ctlK').getBoundingClientRect();
+  eV.currentTime=(ev.clientX-r.left)/r.width*S.vd;
+});
+
+function selectCap(i){
+  selCap=i;renderCapTL();updateCapSelEd();
+}
+function updateCapSelEd(){
+  const has=selCap>=0&&selCap<S.caps.length;
+  const lbl=$('cseLabel');const tx=$('cseText');const ss=$('cseS');const se=$('cseE');
+  const bSplit=$('cseSplit');const bDel=$('cseDel');
+  [tx,ss,se,bSplit,bDel].forEach(el=>el.disabled=!has);
+  if(!has){lbl.className='cse-lbl';lbl.textContent='Select a caption';tx.value='';ss.value='';se.value='';return}
+  const cap=S.caps[selCap];
+  lbl.className='cse-lbl has';lbl.textContent=`Caption ${selCap+1} / ${S.caps.length}`;
+  tx.value=cap.text;ss.value=fmt(cap.start);se.value=fmt(cap.end);
+}
+
+// Caption editor inputs
+$('cseText').addEventListener('input',e=>{if(selCap<0)return;S.caps[selCap].text=e.target.value;renderCapTL();renderCapOv(eV.currentTime||0)});
+$('cseS').addEventListener('change',e=>{if(selCap<0)return;S.caps[selCap].start=pT(e.target.value);renderCapTL();renderCM()});
+$('cseE').addEventListener('change',e=>{if(selCap<0)return;S.caps[selCap].end=pT(e.target.value);renderCapTL();renderCM()});
+$('cseSplit').addEventListener('click',()=>{
+  if(selCap<0)return;const t=eV.currentTime;const cap=S.caps[selCap];
+  if(t<=cap.start||t>=cap.end){toast('Move playhead inside this caption');return}
   const words=cap.text.trim().split(/\s+/);if(words.length<2){toast('Too short to split');return}
   const ratio=(t-cap.start)/(cap.end-cap.start);const sp=Math.max(1,Math.round(words.length*ratio));
-  S.caps.splice(i,1,{id:Date.now(),start:cap.start,end:parseFloat(t.toFixed(2)),text:words.slice(0,sp).join(' ')},{id:Date.now()+1,start:parseFloat(t.toFixed(2)),end:cap.end,text:words.slice(sp).join(' ')});
-  renderCL();renderCM();toast('Split!');
-}));
-cl.querySelectorAll('.cx').forEach(el=>el.addEventListener('input',e=>{S.caps[e.target.dataset.i].text=e.target.value;renderCapOv(eV.currentTime||0)}));
-cl.querySelectorAll('.ct input').forEach(el=>el.addEventListener('change',e=>{const i=e.target.dataset.i;if(e.target.dataset.f==='s')S.caps[i].start=pT(e.target.value);else S.caps[i].end=pT(e.target.value);renderCM()}));
-cl.querySelectorAll('.cd').forEach(el=>el.addEventListener('click',e=>{S.caps.splice(parseInt(e.target.dataset.i),1);renderCL();renderCM()}))}
+  S.caps.splice(selCap,1,{id:Date.now(),start:cap.start,end:parseFloat(t.toFixed(2)),text:words.slice(0,sp).join(' ')},{id:Date.now()+1,start:parseFloat(t.toFixed(2)),end:cap.end,text:words.slice(sp).join(' ')});
+  renderCapTL();renderCM();updateCapSelEd();toast('Split!');
+});
+$('cseDel').addEventListener('click',()=>{
+  if(selCap<0)return;S.caps.splice(selCap,1);selCap=Math.min(selCap,S.caps.length-1);renderCapTL();renderCM();updateCapSelEd();
+});
+$('capPrev').addEventListener('click',()=>{if(!S.caps.length)return;selectCap(Math.max(0,selCap<=0?S.caps.length-1:selCap-1));eV.currentTime=S.caps[selCap].start;renderCapOv(S.caps[selCap].start)});
+$('capNext').addEventListener('click',()=>{if(!S.caps.length)return;selectCap(selCap>=S.caps.length-1?0:selCap+1);eV.currentTime=S.caps[selCap].start;renderCapOv(S.caps[selCap].start)});
+
 function pT(s){const p=s.split(':');return p.length===2?parseInt(p[0])*60+parseInt(p[1]):parseFloat(s)||0}
-$('aC').addEventListener('click',()=>{const ct=eV.currentTime||0;S.caps.push({id:Date.now(),start:ct,end:Math.min(ct+2,S.vd||ct+2),text:'New caption'});renderCL();renderCM()});
+$('aC').addEventListener('click',()=>{const ct=eV.currentTime||0;const i=S.caps.length;S.caps.push({id:Date.now(),start:parseFloat(ct.toFixed(2)),end:parseFloat(Math.min(ct+2,S.vd||ct+2).toFixed(2)),text:'New caption'});selectCap(i);renderCapTL();renderCM()});
+
+// ═══ VIDEO CUT ═══
+function updateCutUI(){
+  const z=$('cutZ');const s=S.cut.start;const e=S.cut.end;
+  $('cutSL').textContent=s!==null?fmt(s):'--';
+  $('cutEL').textContent=e!==null?fmt(e):'--';
+  if(s!==null&&e!==null&&S.vd){
+    z.classList.add('sh');z.style.left=(s/S.vd*100)+'%';z.style.width=((e-s)/S.vd*100)+'%';
+  }else{z.classList.remove('sh')}
+}
+$('markCutS').addEventListener('click',()=>{S.cut.start=parseFloat((eV.currentTime||0).toFixed(2));if(S.cut.end!==null&&S.cut.start>=S.cut.end)S.cut.end=null;updateCutUI();toast('Cut start marked')});
+$('markCutE').addEventListener('click',()=>{
+  const t=parseFloat((eV.currentTime||0).toFixed(2));
+  if(S.cut.start===null||t<=S.cut.start){toast('Mark a start point first');return}
+  S.cut.end=t;updateCutUI();toast('Cut end marked — red zone will be removed on export');
+});
+$('clearCut').addEventListener('click',()=>{S.cut={start:null,end:null};updateCutUI();toast('Cut cleared')});
+
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.tab-pane').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');$(b.dataset.tab).classList.add('on');
+}));
 
 function renderCM(){const c=$('cMs');c.innerHTML='';if(!S.vd)return;
 S.caps.forEach(cap=>{const d=document.createElement('div');d.className='cpm';d.style.left=(cap.start/S.vd*100)+'%';d.style.width=((cap.end-cap.start)/S.vd*100)+'%';c.appendChild(d)})}
 
 // Playback
 $('tlP').addEventListener('click',()=>{if(!eV.src)return;if(eV.paused){eV.currentTime=Math.max(eV.currentTime,S.ts);eV.play();$('tlP').textContent='⏸'}else{eV.pause();$('tlP').textContent='▶'}});
-eV.addEventListener('timeupdate',()=>{if(!S.vd)return;const p=eV.currentTime/S.vd*100;$('tlG').style.width=p+'%';$('tlH').style.left=p+'%';$('tlC').textContent=fmt(eV.currentTime);renderCapOv(eV.currentTime);if(eV.currentTime>=S.te){eV.pause();$('tlP').textContent='▶'}});
+eV.addEventListener('timeupdate',()=>{
+  if(!S.vd)return;
+  const t=eV.currentTime;
+  // Skip cut zone during playback
+  if(S.cut.start!==null&&S.cut.end!==null&&t>=S.cut.start&&t<S.cut.end){eV.currentTime=S.cut.end;return}
+  const p=t/S.vd*100;
+  $('tlG').style.width=p+'%';$('tlH').style.left=p+'%';$('tlC').textContent=fmt(t);
+  $('ctlH').style.left=p+'%';
+  renderCapOv(t);
+  // Auto-select active caption
+  const ci=S.caps.findIndex(c=>t>=c.start&&t<=c.end);
+  if(ci>=0&&ci!==selCap){selCap=ci;renderCapTL();updateCapSelEd()}
+  // Highlight current block without full re-render when playing smoothly
+  document.querySelectorAll('.cb2').forEach((el,i)=>{el.classList.toggle('cur',i===ci&&i!==selCap)});
+  if(eV.currentTime>=S.te){eV.pause();$('tlP').textContent='▶'}
+});
 eV.addEventListener('ended',()=>{$('tlP').textContent='▶'});
 $('tlK').addEventListener('click',e=>{if(!S.vd)return;const r=$('tlK').getBoundingClientRect();eV.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*S.vd});
 
@@ -801,8 +977,6 @@ function renderCapOv(t){
   ov.style.bottom=S.cs.pos==='bottom'?'10%':(S.cs.pos==='center'?'50%':'');
   ov.style.transform=S.cs.pos==='center'?'translate(-50%,50%)':'translateX(-50%)';
   ov.innerHTML=ac.map(c=>`<div>${pr.uppercase?c.text.toUpperCase():c.text}</div>`).join('');
-  document.querySelectorAll('.ci').forEach(el=>el.classList.toggle('act',ac.some(c=>c.id===parseInt(el.dataset.id))));
-  const actEl=document.querySelector('.ci.act');if(actEl)actEl.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 // ═══ EXPORT — CANVAS-BURNED MP4 ═══
@@ -861,7 +1035,10 @@ async function expVid(){
     const sc=w/1080;
 
     const rf=()=>{
-      if(eV.currentTime>=S.te||eV.paused){eV.pause();rec.stop();return}
+      if(eV.paused&&eV.currentTime>=S.te){eV.pause();rec.stop();return}
+      // Skip cut zone during export
+      if(S.cut.start!==null&&S.cut.end!==null&&eV.currentTime>=S.cut.start&&eV.currentTime<S.cut.end){eV.currentTime=S.cut.end;requestAnimationFrame(rf);return}
+      if(eV.currentTime>=S.te){eV.pause();rec.stop();return}
       // Apply adjustments + slim via ctx.filter before drawing
       const adjStr=`brightness(${S.adj.brightness}%) contrast(${S.adj.contrast}%) saturate(${S.adj.saturation}%)`;
       ctx.save();ctx.filter=adjStr;
