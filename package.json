@@ -1,7 +1,7 @@
 {
-  "name": "clip1t",
+  "name": "say1t",
   "version": "1.0.0",
-  "description": "Script, Record, Caption & Post — for Instagram Reels & TikTok",
+  "description": "Say it. Script it. Ship it. — for Instagram Reels & TikTok",
   "scripts": {
     "dev": "npx serve public -l 3000",
     "start": "npx serve public -l 3000"

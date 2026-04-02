@@ -1,11 +1,10 @@
-# Clip1t
+# Say1t
 
-Script, Record, Caption & Post — for Instagram Reels & TikTok.
+Say it. Script it. Ship it. For Instagram Reels & TikTok.
 
 ## Quick Start
 
 ```bash
-cd clip1t
 npx serve public
 ```
 

@@ -1,7 +1,7 @@
 {
-  "name": "Clip1t",
-  "short_name": "Clip1t",
-  "description": "Script, Record, Caption & Post — for Instagram Reels & TikTok",
+  "name": "Say1t",
+  "short_name": "Say1t",
+  "description": "Say it. Script it. Ship it. For Instagram Reels & TikTok",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
