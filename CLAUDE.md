@@ -1,4 +1,4 @@
-# Clip1t
+# Say1t
 
 A Progressive Web App (PWA) for content creators: AI-powered script writing, teleprompter with live camera, video recording with audio, auto-captioning from script, video filters, and export with burned-in captions.
 
